@@ -1,0 +1,19 @@
+# dependencies
+node_modules/
+*/node_modules/
+
+# env / secrets
+.env
+*/.env
+!.env.example
+
+# build output
+client/dist/
+dist/
+
+# cached API crawl (regenerate with analyzeData.js)
+server/data/cache.json
+
+# logs / os
+*.log
+.DS_Store
