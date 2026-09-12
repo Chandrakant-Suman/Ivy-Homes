@@ -18,7 +18,13 @@ export default function Login() {
       await login(email.trim(), password);
       navigate('/listings');
     } catch (err) {
-      setError(err?.response?.data?.error || 'Login failed. Check your email and password.');
+      if (err?.response) {
+        // the server answered (e.g. 401) — show its message
+        setError(err.response.data?.error || 'Invalid email or password.');
+      } else {
+        // no response at all — the backend is unreachable
+        setError('Cannot reach the server. Make sure the backend is running on port 4000.');
+      }
     } finally {
       setLoading(false);
     }
