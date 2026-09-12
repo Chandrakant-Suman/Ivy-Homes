@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { asyncHandler } from '../utils/http.js';
-import { login, logout, refresh } from '../controllers/authController.js';
+import { login, logout, refresh, demoLogin } from '../controllers/authController.js';
 import { listListings, getListing, getSimilar } from '../controllers/listingsController.js';
 import { listRentals, getRental } from '../controllers/rentalsController.js';
 import { listProjects, getProject } from '../controllers/projectsController.js';
@@ -11,6 +11,7 @@ const router = Router();
 
 // auth
 router.post('/auth/login', asyncHandler(login));
+router.post('/auth/demo-login', asyncHandler(demoLogin));
 router.post('/auth/refresh', asyncHandler(refresh));
 router.post('/auth/logout', asyncHandler(logout));
 

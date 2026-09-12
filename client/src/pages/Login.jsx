@@ -3,12 +3,17 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 
 export default function Login() {
-  const { login } = useAuth();
+  const { login, demoLogin } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState('demo1@ivy.homes');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  function describe(err) {
+    if (err?.response) return err.response.data?.error || 'Invalid email or password.';
+    return 'Cannot reach the server. Make sure the backend is running on port 4000.';
+  }
 
   async function onSubmit(e) {
     e.preventDefault();
@@ -18,13 +23,20 @@ export default function Login() {
       await login(email.trim(), password);
       navigate('/listings');
     } catch (err) {
-      if (err?.response) {
-        // the server answered (e.g. 401) — show its message
-        setError(err.response.data?.error || 'Invalid email or password.');
-      } else {
-        // no response at all — the backend is unreachable
-        setError('Cannot reach the server. Make sure the backend is running on port 4000.');
-      }
+      setError(describe(err));
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function onDemo() {
+    setError('');
+    setLoading(true);
+    try {
+      await demoLogin(email.trim() || 'demo1@ivy.homes');
+      navigate('/listings');
+    } catch (err) {
+      setError(describe(err));
     } finally {
       setLoading(false);
     }
@@ -69,8 +81,21 @@ export default function Login() {
             {loading ? 'Signing in…' : 'Sign in'}
           </button>
 
+          <div className="relative py-1 text-center">
+            <span className="bg-white px-2 text-xs text-slate-400">or</span>
+          </div>
+
+          <button
+            type="button"
+            onClick={onDemo}
+            disabled={loading}
+            className="w-full rounded-md border border-emerald-600 px-4 py-2 text-sm font-semibold text-emerald-700 hover:bg-emerald-50 disabled:opacity-60"
+          >
+            Use demo account ({email || 'demo1@ivy.homes'})
+          </button>
+
           <p className="text-center text-xs text-slate-400">
-            Demo users: demo1 / demo2 / demo3 @ivy.homes
+            Demo users: demo1 / demo2 / demo3 @ivy.homes — the password is kept on the server.
           </p>
         </form>
       </div>

@@ -94,10 +94,13 @@ IVY_DEMO_EMAIL=demo1@ivy.homes IVY_DEMO_PASSWORD=<password> npm run analyze
 | `IVY_BASE_URL` | Upstream API base, `https://solve.ivy.homes` |
 | `IVY_API_KEY`  | Your API key (**server-side only**) |
 | `PORT`         | Backend port (default `4000`) |
+| `IVY_DEMO_EMAIL` | Default demo user for the one-click demo login (`demo1@ivy.homes`) |
+| `IVY_DEMO_PASSWORD` | Shared demo password — used by the server-side demo-login and the analyze script; **never shipped to the browser** |
 
-The demo **password** is deliberately *not* stored anywhere. Users type it on
-the login page; the analyze script reads it from `IVY_DEMO_PASSWORD` / an arg at
-run time.
+The demo **password** is kept server-side only (in `.env`, like the API key).
+The login page's "Use demo account" button calls `POST /api/auth/demo-login`,
+which logs in on the server using `IVY_DEMO_PASSWORD`, so the password is never
+exposed in the frontend. The analyze script reads the same value from env / an arg.
 
 `client/.env` (optional): `VITE_API_BASE` (defaults to `/api`).
 
@@ -144,6 +147,10 @@ the runtime and the analyze script, so the app and the submission never drift).
    tokens and replays the request — so the app keeps working well past 15 minutes.
 4. Logout calls `/api/auth/logout` and clears local storage. (Upstream logout is
    stateless — see the findings — so clearing the client is what actually matters.)
+
+There is also a **"Use demo account"** button that hits `POST /api/auth/demo-login`;
+the backend logs in with the demo password from its `.env` (only `demo1/2/3@ivy.homes`
+are accepted) and returns the tokens, keeping the password out of the frontend entirely.
 
 ## 9. How pagination works
 

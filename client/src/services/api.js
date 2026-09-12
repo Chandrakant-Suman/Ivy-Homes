@@ -74,6 +74,8 @@ api.interceptors.response.use(
 // ---- API calls -------------------------------------------------------------
 export const authApi = {
   login: (email, password) => axios.post(`${BASE}/auth/login`, { email, password }).then((r) => r.data),
+  // server-side demo login: the password stays in the backend .env
+  demoLogin: (email) => axios.post(`${BASE}/auth/demo-login`, { email }).then((r) => r.data),
   logout: () => api.post('/auth/logout').then((r) => r.data),
 };
 

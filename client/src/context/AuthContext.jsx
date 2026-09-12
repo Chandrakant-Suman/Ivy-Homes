@@ -14,6 +14,14 @@ export function AuthProvider({ children }) {
     return data;
   }
 
+  // One-click demo sign-in (password handled server-side).
+  async function demoLogin(email) {
+    const data = await authApi.demoLogin(email);
+    tokenStore.save(data);
+    setUser(data.user || { email: email || 'demo1@ivy.homes' });
+    return data;
+  }
+
   async function logout() {
     try {
       await authApi.logout();
@@ -25,7 +33,7 @@ export function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, isAuthed: !!tokenStore.access, login, logout }}>
+    <AuthContext.Provider value={{ user, isAuthed: !!tokenStore.access, login, demoLogin, logout }}>
       {children}
     </AuthContext.Provider>
   );
