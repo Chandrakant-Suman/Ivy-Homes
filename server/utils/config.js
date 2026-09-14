@@ -1,5 +1,11 @@
+import path from 'path';
+import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
-dotenv.config();
+
+// Always load server/.env regardless of the process's working directory
+// (e.g. when started as `node server/server.js` from the repo root).
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.join(__dirname, '../.env') });
 
 // Central config. The API key lives here (from .env) and never reaches the browser.
 export const config = {
